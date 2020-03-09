@@ -1,9 +1,9 @@
 package com.wushiyii.core;
 
-import com.wushiyii.annotation.Component;
-import com.wushiyii.annotation.Controller;
-import com.wushiyii.annotation.Repository;
-import com.wushiyii.annotation.Service;
+import com.wushiyii.annotation.mvc.Component;
+import com.wushiyii.annotation.mvc.Controller;
+import com.wushiyii.annotation.mvc.Repository;
+import com.wushiyii.annotation.mvc.Service;
 import com.wushiyii.util.ClassUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -64,7 +64,7 @@ public class BeanContainer {
     public Set<Class<?>> getClassesBySuper(Class<?> superClass) {
         return beanMap.keySet()
                 .stream()
-                .filter(clazz -> clazz.isAssignableFrom(superClass))
+                .filter(superClass::isAssignableFrom)
                 .filter(clazz -> !clazz.equals(superClass))
                 .collect(Collectors.toSet());
     }
@@ -85,6 +85,16 @@ public class BeanContainer {
                 }
         ).forEach(clazz -> beanMap.put(clazz, ClassUtil.newInstance(clazz)));
         isLoadedBean = true;
+    }
+
+    public Object getClassInstance(Class<?> clz) {
+        return Optional.ofNullable(beanMap.get(clz)).orElseGet(() -> getBean(getImplementClass(clz)));
+    }
+
+
+    private Class<?> getImplementClass(Class<?> interfaceClass) {
+        return getClassesBySuper(interfaceClass)
+                .stream().findFirst().orElse(null);
     }
 
     public boolean isLoadedBean() {

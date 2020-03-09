@@ -10,7 +10,7 @@ public class ClassUtilTest {
 
     @Test
     public void getClassByName() throws IllegalAccessException, InstantiationException {
-        final Class<?> clazz = ClassUtil.getClassByName("com.wushiyii.mvc.TestController");
+        final Class<?> clazz = ClassUtil.getClassByName("com.wushiyii.controller.TestController");
         System.out.println(clazz);
         System.out.println(clazz.newInstance());
     }

@@ -1,4 +1,4 @@
-package com.wushiyii.annotation;
+package com.wushiyii.annotation.ioc;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,9 +7,10 @@ import java.lang.annotation.Target;
 
 /**
  * @author wgq
- * @date 2020/3/6 10:49 上午
+ * @date 2020/3/9 2:13 下午
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Repository {
+public @interface Autowired {
+
 }

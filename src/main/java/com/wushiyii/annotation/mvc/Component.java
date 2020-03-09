@@ -1,4 +1,4 @@
-package com.wushiyii.annotation;
+package com.wushiyii.annotation.mvc;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,9 +7,10 @@ import java.lang.annotation.Target;
 
 /**
  * @author wgq
- * @date 2020/3/6 10:49 上午
+ * @date 2020/3/6 10:47 上午
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Service {
+public @interface Component {
+
 }

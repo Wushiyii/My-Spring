@@ -1,4 +1,4 @@
-package com.wushiyii.annotation;
+package com.wushiyii.annotation.mvc;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
