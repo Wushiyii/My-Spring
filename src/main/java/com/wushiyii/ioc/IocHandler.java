@@ -29,7 +29,7 @@ public class IocHandler {
             for (Field field : fields) {
                 if (field.isAnnotationPresent(Autowired.class)) {
                     Class<?> fieldType = field.getType();
-                    Object valueObject = beanContainer.getClassInstance(fieldType);;
+                    Object valueObject = beanContainer.getClassInstance(fieldType);
                     if (Objects.nonNull(valueObject)) {
                         ClassUtil.setField(bean, field, valueObject);
                     } else {
