@@ -22,4 +22,8 @@ public class TestController {
         testService.fun();
     }
 
+    public String returnFun() {
+        return testService.returnFun("hello");
+    }
+
 }

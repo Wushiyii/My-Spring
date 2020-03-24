@@ -1,5 +1,6 @@
 package com.wushiyii.core;
 
+import com.wushiyii.annotation.aop.Aspect;
 import com.wushiyii.annotation.mvc.Component;
 import com.wushiyii.annotation.mvc.Controller;
 import com.wushiyii.annotation.mvc.Repository;
@@ -27,7 +28,7 @@ public class BeanContainer {
     private boolean isLoadedBean = false;
 
     private static final List<Class<? extends Annotation>> BEAN_ANNOTATION =
-            Arrays.asList(Component.class, Controller.class, Repository.class, Service.class);
+            Arrays.asList(Component.class, Controller.class, Repository.class, Service.class, Aspect.class);
 
     public Object getBean(Class<?> clazz) {
         return beanMap.get(clazz);

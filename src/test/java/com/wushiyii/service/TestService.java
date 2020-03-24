@@ -8,4 +8,5 @@ public interface TestService {
 
     void fun();
 
+    String returnFun(String msg);
 }

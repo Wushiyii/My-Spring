@@ -16,4 +16,10 @@ public class TestServiceImpl implements TestService {
     public void fun() {
         log.info("fun() method execute");
     }
+
+    @Override
+    public String returnFun(String msg) {
+        log.info("this is " + msg);
+        return "this is " + msg;
+    }
 }

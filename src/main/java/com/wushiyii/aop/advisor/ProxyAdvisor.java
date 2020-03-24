@@ -41,8 +41,4 @@ public class ProxyAdvisor {
         }
         return returnVal;
     }
-
-    public ProxyAdvisor(Advice advice) {
-        this.advice = advice;
-    }
 }
