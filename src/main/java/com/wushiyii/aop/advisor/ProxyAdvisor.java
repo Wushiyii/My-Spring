@@ -4,6 +4,7 @@ import com.wushiyii.aop.advice.Advice;
 import com.wushiyii.aop.advice.AfterReturningAdvice;
 import com.wushiyii.aop.advice.MethodBeforeAdvice;
 import com.wushiyii.aop.advice.ThrowableAdvice;
+import com.wushiyii.aop.pointcut.ProxyPointcut;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,13 @@ public class ProxyAdvisor {
 
     private Advice advice;
 
+    private ProxyPointcut pointcut;
+
     public Object doProxy(Object target, Class<?> targetClazz, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+        //判断是否匹配切面方法，不匹配直接执行
+        if (!pointcut.matches(method)) {
+            return proxy.invokeSuper(target, args);
+        }
         if (advice instanceof MethodBeforeAdvice) {
             ((MethodBeforeAdvice) advice).before(targetClazz, method, args);
         }

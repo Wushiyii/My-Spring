@@ -4,6 +4,7 @@ import com.wushiyii.annotation.aop.Aspect;
 import com.wushiyii.aop.advice.Advice;
 import com.wushiyii.aop.advisor.ProxyAdvisor;
 import com.wushiyii.aop.creator.ProxyCreator;
+import com.wushiyii.aop.pointcut.ProxyPointcut;
 import com.wushiyii.core.BeanContainer;
 
 /**
@@ -22,17 +23,25 @@ public class AopHandler {
         beanContainer.getClassesBySuper(Advice.class)
                 .stream()
                 .filter(clazz -> clazz.isAnnotationPresent(Aspect.class))
-                .forEach(clazz -> {
-                    Advice advice = (Advice) beanContainer.getBean(clazz);
-                    Aspect aspect = clazz.getAnnotation(Aspect.class);
-                    beanContainer.getClassesByAnnotation(aspect.target()).stream()
-                            .filter(aspectClazz -> !Advice.class.isAssignableFrom(aspectClazz))
-                            .filter(aspectClazz -> !aspectClazz.isAnnotationPresent(Aspect.class))
-                            .forEach(aspectClazz -> {
-                                ProxyAdvisor advisor = new ProxyAdvisor(advice);
-                                Object proxyInstance = ProxyCreator.createProxyInstance(aspectClazz, advisor);
-                                beanContainer.addBean(aspectClazz, proxyInstance);
-                            });
-                });
+                .map(this::createProxyAdvisor)
+                .forEach(advisor -> beanContainer.getClasses()
+                        .stream()
+                        .filter(targetClazz -> !Advice.class.isAssignableFrom(targetClazz))
+                        .filter(targetClazz -> !targetClazz.isAnnotationPresent(Aspect.class))
+                        .forEach(targetClazz -> {
+                            if (advisor.getPointcut().matches(targetClazz)) {
+                                Object proxyInstance = ProxyCreator.createProxyInstance(targetClazz, advisor);
+                                beanContainer.addBean(targetClazz, proxyInstance);
+                            }
+                        })
+                );
+    }
+
+    private ProxyAdvisor createProxyAdvisor(Class<?> aspectClazz) {
+        String expression = aspectClazz.getAnnotation(Aspect.class).pointcut();
+        ProxyPointcut pointcut = new ProxyPointcut();
+        pointcut.setExpression(expression);
+        Advice advice = (Advice) beanContainer.getBean(aspectClazz);
+        return new ProxyAdvisor(advice, pointcut);
     }
 }

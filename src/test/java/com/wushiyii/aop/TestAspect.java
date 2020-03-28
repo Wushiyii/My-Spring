@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Method;
 
 @Slf4j
-@Aspect(target = Controller.class)
+@Aspect(pointcut = "execution(* com.wushiyii.controller.TestController.returnFun(..))")
 public class TestAspect implements AroundAdvice {
     @Override
     public void after(Class<?> clazz, Method method, Object[] args, Object returnVal) {

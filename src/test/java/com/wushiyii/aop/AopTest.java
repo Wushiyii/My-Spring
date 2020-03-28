@@ -16,6 +16,7 @@ public class AopTest {
 
         TestController testController = (TestController) container.getClassInstance(TestController.class);
         testController.returnFun();
+        testController.fun();
     }
 
 }
