@@ -1,9 +1,6 @@
 package com.wushiyii.aop.advisor;
 
-import com.wushiyii.aop.advice.Advice;
-import com.wushiyii.aop.advice.AfterReturningAdvice;
-import com.wushiyii.aop.advice.MethodBeforeAdvice;
-import com.wushiyii.aop.advice.ThrowableAdvice;
+import com.wushiyii.aop.advice.*;
 import com.wushiyii.aop.pointcut.ProxyPointcut;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,17 +22,18 @@ public class ProxyAdvisor {
 
     private ProxyPointcut pointcut;
 
-    public Object doProxy(Object target, Class<?> targetClazz, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-        //判断是否匹配切面方法，不匹配直接执行
-        if (!pointcut.matches(method)) {
-            return proxy.invokeSuper(target, args);
-        }
+    private int order;
+
+    public Object doProxy(AdviceChain adviceChain) throws Throwable {
+        Object returnVal = null;
+        Class<?> targetClazz = adviceChain.getTargetClass();
+        Object[] args = adviceChain.getArgs();
+        Method method = adviceChain.getMethod();
         if (advice instanceof MethodBeforeAdvice) {
             ((MethodBeforeAdvice) advice).before(targetClazz, method, args);
         }
-        Object returnVal = null;
         try {
-            returnVal = proxy.invokeSuper(target, args);
+            returnVal = adviceChain.doAdviceChain();
             if (advice instanceof AfterReturningAdvice) {
                 ((AfterReturningAdvice) advice).after(targetClazz, method, args, returnVal);
             }
