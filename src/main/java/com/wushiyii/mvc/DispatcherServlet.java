@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author wgq
  * @date 2020/4/4 8:05 下午
  */
-public class DispatchServlet extends HttpServlet {
+public class DispatcherServlet extends HttpServlet {
 
     private ControllerHandler controllerHandler = new ControllerHandler();
 
