@@ -18,7 +18,7 @@ public class DispatcherServlet extends HttpServlet {
     private ResultRender resultRender = new ResultRender();
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
         String requestMethod = req.getMethod();
         String requestPath = req.getPathInfo();

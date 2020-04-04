@@ -19,9 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MVC {
 
-    public static Configuration configuration = Configuration.builder().build();
+    @Getter
+    private static Configuration configuration = Configuration.builder().build();
 
-    public static Server server;
+    @Getter
+    private static Server server;
 
     public static void run(Class<?> bootClass) {
         run(Configuration.builder().bootClass(bootClass).build());

@@ -33,12 +33,12 @@ public class Configuration {
      * tomcat docBase目录
      */
     @Builder.Default
-    private String docBase;
+    private String docBase = "";
 
     /**
      * tomcat contextPath目录
      */
     @Builder.Default
-    private String contextPath;
+    private String contextPath = "";
 
 }

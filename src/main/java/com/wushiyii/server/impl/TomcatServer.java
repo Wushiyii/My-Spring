@@ -23,7 +23,7 @@ public class TomcatServer implements Server {
     private Tomcat tomcat;
 
     public TomcatServer() {
-        this(MVC.configuration);
+        this(MVC.getConfiguration());
     }
 
     public TomcatServer(Configuration configuration) {
@@ -33,7 +33,7 @@ public class TomcatServer implements Server {
             tomcat.setBaseDir(configuration.getDocBase());
             tomcat.setPort(configuration.getServerPort());
 
-            File root = getRootFolder();
+            File root = getRootFolder(configuration);
             File resourceFile = new File(root.getAbsolutePath(), configuration.getResourcePath());
             if (!resourceFile.exists()) {
                 resourceFile = Files.createTempDirectory("default-doc-base").toFile();
@@ -44,7 +44,7 @@ public class TomcatServer implements Server {
             context.setParentClassLoader(this.getClass().getClassLoader());
             context.setResources(new StandardRoot(context));
 
-            tomcat.addServlet("", "dispatcherServlet", new DispatcherServlet()).setLoadOnStartup(0);
+            tomcat.addServlet(configuration.getContextPath(), "dispatcherServlet", new DispatcherServlet()).setLoadOnStartup(0);
             context.addServletMappingDecoded("/*", "dispatcherServlet");
 
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class TomcatServer implements Server {
     public void startServer() throws Exception {
         tomcat.start();
         String address = tomcat.getServer().getAddress();
-        int port = tomcat.getServer().getPort();
+        int port = tomcat.getConnector().getPort();
         log.info("tomcat started at: http://{}:{}", address, port);
         tomcat.getServer().await();
     }
@@ -68,19 +68,20 @@ public class TomcatServer implements Server {
         tomcat.stop();
     }
 
-    private File getRootFolder() {
+    private File getRootFolder(Configuration configuration) {
         try {
             File root;
-            String runningJarPath = this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replace("\\\\", "/");
-            if (!runningJarPath.contains("/target/")) {
+            String runningJarPath = configuration.getBootClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replaceAll("\\\\", "/");
+            int lastIndexOf = runningJarPath.lastIndexOf("/target/");
+            if (lastIndexOf < 0) {
                 root = new File("");
             } else {
-                root = new File(runningJarPath.substring(0, runningJarPath.indexOf("/target/")));
+                root = new File(runningJarPath.substring(0, lastIndexOf));
             }
             log.info("Tomcat:application resolved root folder: [{}]", root.getAbsolutePath());
             return root;
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+        } catch (URISyntaxException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

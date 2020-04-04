@@ -2,8 +2,8 @@ package com.wushiyii.controller;
 
 import com.wushiyii.annotation.ioc.Autowired;
 import com.wushiyii.annotation.mvc.Controller;
-import com.wushiyii.core.BeanContainer;
-import com.wushiyii.ioc.IocHandler;
+import com.wushiyii.annotation.mvc.RequestMapping;
+import com.wushiyii.annotation.mvc.ResponseBody;
 import com.wushiyii.service.TestService;
 import lombok.Data;
 
@@ -13,6 +13,7 @@ import lombok.Data;
  */
 @Data
 @Controller
+@RequestMapping("test")
 public class TestController {
 
     @Autowired
@@ -21,7 +22,8 @@ public class TestController {
     public void fun() {
         testService.fun();
     }
-
+    @ResponseBody
+    @RequestMapping("returnFun")
     public String returnFun() {
         return testService.returnFun("hello");
     }
